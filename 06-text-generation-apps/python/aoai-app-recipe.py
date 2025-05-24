@@ -9,19 +9,19 @@ load_dotenv()
 client = AzureOpenAI(
   azure_endpoint = os.environ["AZURE_OPENAI_ENDPOINT"], 
   api_key=os.environ['AZURE_OPENAI_API_KEY'],  
-  api_version = "2023-10-01-preview"
+  api_version = os.environ['AZURE_OPENAI_API_VERSION']
   )
 
 deployment=os.environ['AZURE_OPENAI_DEPLOYMENT']
 
-no_recipes = input("No of recipes (for example, 5: ")
+no_recipes = input("No of recipes (for example, 5): ")
 
-ingredients = input("List of ingredients (for example, chicken, potatoes, and carrots: ")
+ingredients = input("List of ingredients (for example, chicken, potatoes, and carrots): ")
 
-filter = input("Filter (for example, vegetarian, vegan, or gluten-free: ")
+filter = input("What should not be included? (e.g. peanuts, meat): ")
 
 # interpolate the number of recipes into the prompt an ingredients
-prompt = f"Show me {no_recipes} recipes for a dish with the following ingredients: {ingredients}. Per recipe, list all the ingredients used, no {filter}: "
+prompt = f"Show me {no_recipes} recipes for a dish with the following ingredients: {ingredients}. Per recipe, list all the ingredients used. Ingredients to avoid: {filter}."
 messages = [{"role": "user", "content": prompt}]
 
 completion = client.chat.completions.create(model=deployment, messages=messages, max_tokens=600, temperature = 0.1)
